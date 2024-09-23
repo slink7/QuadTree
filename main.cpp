@@ -1,9 +1,14 @@
 
+#include <vector>
+#include <chrono>
+#include <cmath>
+#include <random>
 #include <SDL2/SDL.h>
 
-#include "Drawer.hpp"
+#include "Solver.hpp"
 
-int	main(int argc, char **argv) {
-	Drawer drawer("Fenetre");
-	SDL_Delay(2000);
+int	main() {
+	Solver solver;
+
+	solver.run();
 }
