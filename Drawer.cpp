@@ -28,6 +28,13 @@ void Drawer::Clear()
 	SDL_RenderClear(renderer);
 }
 
+void Drawer::DrawRect(int x, int y, int w, int h)
+{
+	SDL_Rect	rect = {x, y, w, h};
+
+	SDL_RenderDrawRect(renderer, &rect);
+}
+
 void Drawer::FillRect(int x, int y, int w, int h)
 {
 	SDL_Rect	rect = {x, y, w, h};

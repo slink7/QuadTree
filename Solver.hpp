@@ -19,6 +19,7 @@ class Solver {
 	float				dt;
 	int					dt_correction;
 	QuadTree			qt;
+	Vec2f				mouse_pos;
 
 	std::random_device	random_dev;
 	std::mt19937		mt;

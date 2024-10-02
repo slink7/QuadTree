@@ -19,8 +19,11 @@ public:
 	QuadTree() = default;
 	QuadTree(const Vec2f& pos, float size, int max_values = 4);
 
-	void Insert(Ball& ball);
-	void Subdivide();
+	static bool	IsIn(const Vec2f& A, const Vec2f& pos, float size);
+	bool		Intersect(const Vec2f& pos, float size);
+	void		Insert(Ball& ball);
+	void		Subdivide();
+	void		Querry(std::vector<Ball*>& out, const Vec2f &pos, float size);
 };
 
 

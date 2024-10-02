@@ -11,30 +11,44 @@ void Solver::input()
 			if (event.key.keysym.sym == SDLK_KP_PLUS) {
 				float theta = 2.0f * M_PI * distrib(mt) / 1000.0f;
 				float delta = 192.0f * sqrt(distrib(mt) / 1000.0f);
-				Ball b(256.0f + cosf(theta) * delta, 256.0f + sin(theta) * delta, 2.0f);
+				Ball b(256.0f + cosf(theta) * delta, 256.0f + sin(theta) * delta, 3.0f);
 				//b.acceleration = {distrib(mt) - 500.0f, distrib(mt) - 500.0f};
 				balls.push_back(b);
-				qt.Insert(balls.at(balls.size() - 1));
 			}
+		}
+		if (event.type == SDL_MOUSEMOTION) {
+			int x, y;
+			SDL_GetMouseState(&x, &y);
+			mouse_pos.x = x;
+			mouse_pos.y = y;
 		}
 	}
 }
 
 void Solver::logic()
 {
+	qt = QuadTree((Vec2f){256.0f, 256.0f}, 512.0f, 8);
+	for (Ball& ball : balls) {
+		qt.Insert(ball);
+	}
+
 	for (unsigned long k = 0; k < balls.size(); k++) {
 		Ball& ball0 = balls.at(k);
 		ball0.acceleration = {0.0f, 0.0f};
-		for (unsigned long l = k + 1; l < balls.size(); l++) {
-			Ball& ball1 = balls.at(l);
-			Vec2f	dp = ball0.position - ball1.position;
+		std::vector<Ball*> querry;
+		querry.reserve(10);
+		qt.Querry(querry, ball0.position, 7.0f);
+		for (Ball *ball1 : querry) {
+			if (&ball0 == ball1)
+				break ;
+			Vec2f	dp = ball0.position - ball1->position;
 			float	dist = dp.getNorm();
-			float	min_dist = ball0.radius + ball1.radius;
+			float	min_dist = ball0.radius + ball1->radius;
 			if (dist < min_dist) {
 				const Vec2f n = dp / dist;
 				const float delta = min_dist - dist;
 				ball0.position += n * (ball0.radius / min_dist) * delta;
-				ball1.position -= n * (ball0.radius / min_dist) * delta;
+				ball1->position -= n * (ball0.radius / min_dist) * delta;
 			}
 		}
 
@@ -52,12 +66,14 @@ void Solver::render()
 {
 	drawer.SetColor(255, 255, 255);
 	drawer.Clear();
+	drawer.SetColor(192, 32, 32);
+	drawer.DrawQuadTree(qt);
 	drawer.SetColor(32, 32, 192);
 	for (Ball& ball : balls) {
 		drawer.DrawThinCircle((int)ball.position.x, (int)ball.position.y, (int)ball.radius);
 	}
-	drawer.SetColor(192, 32, 32);
-	drawer.DrawQuadTree(qt);
+	drawer.SetColor(0, 255, 0);
+	drawer.DrawRect(mouse_pos.x - 64, mouse_pos.y - 64, 128, 128);
 	drawer.SetColor(32, 32, 32);
 	drawer.Write("dt:" + std::to_string(dt) + "", 32, 32);
 	drawer.Write("fps:" + std::to_string(1.0f / dt) + "", 32, 48);

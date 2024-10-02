@@ -15,6 +15,7 @@ public:
 
 	void	SetColor(int r, int g, int b, int a = 255);
 	void	Clear();
+	void	DrawRect(int x, int y, int w, int h);
 	void	FillRect(int x, int y, int w, int h);
 	void	DrawThinLine(int x0, int y0, int x1, int y1);
 	void	DrawLine(int x0, int y0, int x1, int y1, int thickness = 1);
