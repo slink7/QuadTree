@@ -10,7 +10,7 @@
 class Drawer {
 
 public:
-	Drawer(const char *title = "Title", int width = 512, int height = 512);
+	Drawer(const char *title = "Title", int width = 1024, int height = 1024);
 	~Drawer();
 
 	void	SetColor(int r, int g, int b, int a = 255);

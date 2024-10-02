@@ -9,11 +9,14 @@ void Solver::input()
 			if (event.key.keysym.sym == SDLK_ESCAPE)
 				exit = true;
 			if (event.key.keysym.sym == SDLK_KP_PLUS) {
-				float theta = 2.0f * M_PI * distrib(mt) / 1000.0f;
-				float delta = 192.0f * sqrt(distrib(mt) / 1000.0f);
-				Ball b(256.0f + cosf(theta) * delta, 256.0f + sin(theta) * delta, 3.0f);
-				//b.acceleration = {distrib(mt) - 500.0f, distrib(mt) - 500.0f};
-				balls.push_back(b);
+				for (int k = 0; k < 5; k++) {
+					float theta = 2.0f * M_PI * distrib(mt) / 1000.0f;
+					float delta = 192.0f * sqrt(distrib(mt) / 1000.0f);
+					Ball b(512.0f + cosf(theta) * delta, 512.0f + sin(theta) * delta, 6.0f);
+					//b.acceleration = {distrib(mt) - 500.0f, distrib(mt) - 500.0f};
+					balls.push_back(b);
+					qt.Insert(balls.at(balls.size() - 1));
+				}
 			}
 		}
 		if (event.type == SDL_MOUSEMOTION) {
@@ -27,17 +30,17 @@ void Solver::input()
 
 void Solver::logic()
 {
-	qt = QuadTree((Vec2f){256.0f, 256.0f}, 512.0f, 8);
+	qt = QuadTree((Vec2f){512.0f, 512.0f}, 1024.0f, 8);
 	for (Ball& ball : balls) {
 		qt.Insert(ball);
 	}
 
 	for (unsigned long k = 0; k < balls.size(); k++) {
 		Ball& ball0 = balls.at(k);
-		ball0.acceleration = {0.0f, 0.0f};
+		ball0.acceleration = {0.0f, 100.0f};
 		std::vector<Ball*> querry;
 		querry.reserve(10);
-		qt.Querry(querry, ball0.position, 7.0f);
+		qt.Querry(querry, ball0.position, 32.0f);
 		for (Ball *ball1 : querry) {
 			if (&ball0 == ball1)
 				break ;
@@ -52,11 +55,20 @@ void Solver::logic()
 			}
 		}
 
-		Vec2f to_obj = ball0.position - Vec2f(256.0f, 256.0f);
+		// if (ball0.position.x < ball0.radius)
+		// 	ball0.position.x = ball0.radius;
+		// if (ball0.position.x > 1024.0f - ball0.radius)
+		// 	ball0.position.x = 1024.0f - ball0.radius;
+		// if (ball0.position.y < ball0.radius)
+		// 	ball0.position.y = ball0.radius;
+		// if (ball0.position.y > 1024.0f - ball0.radius)
+		// 	ball0.position.y = 1024.0f - ball0.radius;
+
+		Vec2f to_obj = ball0.position - Vec2f(512.0f, 512.0f);
 		float dist = to_obj.getNorm();
-		if (dist > 256.0f - ball0.radius) {
+		if (dist > 512.0f - ball0.radius) {
 			Vec2f n = to_obj / dist;
-			ball0.position = Vec2f(256.0f, 256.0f) + n * (256.0f - ball0.radius);
+			ball0.position = Vec2f(512.0f, 512.0f) + n * (512.0f - ball0.radius);
 		}
 		ball0.updatePosition(dt);
 	}
@@ -66,7 +78,7 @@ void Solver::render()
 {
 	drawer.SetColor(255, 255, 255);
 	drawer.Clear();
-	drawer.SetColor(192, 32, 32);
+	drawer.SetColor(255, 192, 192);
 	drawer.DrawQuadTree(qt);
 	drawer.SetColor(32, 32, 192);
 	for (Ball& ball : balls) {
@@ -82,12 +94,12 @@ void Solver::render()
 }
 
 Solver::Solver() : 
-	qt((Vec2f){256.0f, 256.0f}, 512.0f, 8),
+	qt((Vec2f){512.0f, 512.0f}, 1024.0f, 8),
 	mt(std::random_device()()),
 	distrib(0, 1000)
 {
 	previous_tp = std::chrono::steady_clock::now();
-	balls.reserve(3000);
+	balls.reserve(10000);
 }
 
 void Solver::run()
@@ -104,12 +116,13 @@ void Solver::run()
 
 		A = std::chrono::steady_clock::now();
 		logic();
+		logic();
 		float dt_logic = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - A).count() / 1000000.0f;
 
 		A = std::chrono::steady_clock::now();
 		render();
 		float dt_render = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - A).count() / 1000000.0f;
-
+		
 		float sum = dt_render + dt_logic + dt_input;
 		drawer.SetColor(0, 255, 0);
 		drawer.FillRect(32, 88, 128 * (dt_input / sum), 8);
