@@ -11,7 +11,15 @@ Vec2f::Vec2f(float x, float y) {
 	this->y = y;
 }
 
-Vec2f &Vec2f::operator+=(const Vec2f &other) {
+Vec2f &Vec2f::operator=(const Vec2f &other)
+{
+	x = other.x;
+	y = other.y;
+	return (*this);
+}
+
+Vec2f &Vec2f::operator+=(const Vec2f &other)
+{
 	x += other.x;
 	y += other.y;
 	return (*this);

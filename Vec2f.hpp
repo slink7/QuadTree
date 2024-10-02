@@ -10,6 +10,7 @@ struct Vec2f {
 	Vec2f();
 	Vec2f(float x, float y);
 
+	Vec2f&	operator=(const Vec2f& other);
 	Vec2f&	operator+=(const Vec2f& other);
 	Vec2f&	operator-=(const Vec2f& other);
 	Vec2f&	operator*=(const float& other);

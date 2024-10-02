@@ -7,6 +7,7 @@ SRC =\
 	Vec2f.cpp\
 	Drawer.cpp\
 	Ball.cpp\
+	QuadTree.cpp
 	
 CFLAGS = -Wall -Werror -Wextra -g3
 LFLAGS = -lSDL2 -lSDL2_ttf

@@ -28,6 +28,13 @@ void Drawer::Clear()
 	SDL_RenderClear(renderer);
 }
 
+void Drawer::FillRect(int x, int y, int w, int h)
+{
+	SDL_Rect	rect = {x, y, w, h};
+
+	SDL_RenderFillRect(renderer, &rect);
+}
+
 void Drawer::DrawThinLine(int x0, int y0, int x1, int y1)
 {
 	int dx = abs(x1 - x0);
@@ -128,6 +135,18 @@ void Drawer::FillCircle(int x, int y, int radius)
 void Drawer::DrawPixel(int x, int y)
 {
 	SDL_RenderDrawPoint(renderer, x, y);
+}
+
+void Drawer::DrawQuadTree(QuadTree &qt)
+{
+	if (qt.subdivided) {
+		for (int k = 0; k < 4; k++) {
+			DrawQuadTree(*qt.children[k]);
+		}
+	}
+	float		hs = qt.size / 2.0f;
+	SDL_Rect	rect = {(int)(qt.position.x - hs), (int)(qt.position.y - hs), (int)qt.size, (int)qt.size};
+	SDL_RenderDrawRect(renderer, &rect);
 }
 
 void Drawer::Write(const std::string& str, int x, int y)
