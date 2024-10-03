@@ -12,10 +12,9 @@ void Solver::input()
 				for (int k = 0; k < 5; k++) {
 					float theta = 2.0f * M_PI * distrib(mt) / 1000.0f;
 					float delta = 192.0f * sqrt(distrib(mt) / 1000.0f);
-					Ball b(512.0f + cosf(theta) * delta, 512.0f + sin(theta) * delta, 6.0f);
-					//b.acceleration = {distrib(mt) - 500.0f, distrib(mt) - 500.0f};
+					Ball b(512.0f + cosf(theta) * delta, 512.0f + sin(theta) * delta, 8.0f);
+					b.acceleration = {0.0f, 100.0f};
 					balls.push_back(b);
-					qt.Insert(balls.at(balls.size() - 1));
 				}
 			}
 		}
@@ -34,16 +33,15 @@ void Solver::logic()
 	for (Ball& ball : balls) {
 		qt.Insert(ball);
 	}
-
+	std::vector<Ball*> querry;
+	querry.reserve(10);
 	for (unsigned long k = 0; k < balls.size(); k++) {
 		Ball& ball0 = balls.at(k);
-		ball0.acceleration = {0.0f, 100.0f};
-		std::vector<Ball*> querry;
-		querry.reserve(10);
-		qt.Querry(querry, ball0.position, 32.0f);
+		querry.clear();
+		qt.Querry(querry, ball0.position, 33.0f);
 		for (Ball *ball1 : querry) {
 			if (&ball0 == ball1)
-				break ;
+				continue ;
 			Vec2f	dp = ball0.position - ball1->position;
 			float	dist = dp.getNorm();
 			float	min_dist = ball0.radius + ball1->radius;
@@ -55,21 +53,21 @@ void Solver::logic()
 			}
 		}
 
-		// if (ball0.position.x < ball0.radius)
-		// 	ball0.position.x = ball0.radius;
-		// if (ball0.position.x > 1024.0f - ball0.radius)
-		// 	ball0.position.x = 1024.0f - ball0.radius;
-		// if (ball0.position.y < ball0.radius)
-		// 	ball0.position.y = ball0.radius;
-		// if (ball0.position.y > 1024.0f - ball0.radius)
-		// 	ball0.position.y = 1024.0f - ball0.radius;
+		if (ball0.position.x < ball0.radius)
+			ball0.position.x = ball0.radius;
+		if (ball0.position.x > 1024.0f - ball0.radius)
+			ball0.position.x = 1024.0f - ball0.radius;
+		if (ball0.position.y < ball0.radius)
+			ball0.position.y = ball0.radius;
+		if (ball0.position.y > 1024.0f - ball0.radius)
+			ball0.position.y = 1024.0f - ball0.radius;
 
-		Vec2f to_obj = ball0.position - Vec2f(512.0f, 512.0f);
-		float dist = to_obj.getNorm();
-		if (dist > 512.0f - ball0.radius) {
-			Vec2f n = to_obj / dist;
-			ball0.position = Vec2f(512.0f, 512.0f) + n * (512.0f - ball0.radius);
-		}
+		// Vec2f to_obj = ball0.position - Vec2f(512.0f, 512.0f);
+		// float dist = to_obj.getNorm();
+		// if (dist > 512.0f - ball0.radius) {
+		// 	Vec2f n = to_obj / dist;
+		// 	ball0.position = Vec2f(512.0f, 512.0f) + n * (512.0f - ball0.radius);
+		// }
 		ball0.updatePosition(dt);
 	}
 }
@@ -116,7 +114,7 @@ void Solver::run()
 
 		A = std::chrono::steady_clock::now();
 		logic();
-		logic();
+		//logic();
 		float dt_logic = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - A).count() / 1000000.0f;
 
 		A = std::chrono::steady_clock::now();
