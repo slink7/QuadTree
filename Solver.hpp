@@ -7,8 +7,10 @@
 
 #include "Vec2f.hpp"
 #include "Ball.hpp"
-#include "Drawer.hpp"
 #include "QuadTree.hpp"
+#include "Drawer.hpp"
+
+template class QuadTree<Ball>;
 
 class Solver {
 
@@ -18,7 +20,7 @@ class Solver {
 	std::vector<Ball>	balls;
 	float				dt;
 	int					dt_correction;
-	QuadTree			qt;
+	QuadTree<Ball>		qt;
 	Vec2f				mouse_pos;
 
 	std::random_device	random_dev;

@@ -18,31 +18,31 @@ Drawer::~Drawer()
 	SDL_Quit();
 }
 
-void Drawer::SetColor(int r, int g, int b, int a)
+void Drawer::SetColor(int r, int g, int b, int a) const
 {
 	SDL_SetRenderDrawColor(renderer, r, g, b, a);
 }
 
-void Drawer::Clear()
+void Drawer::Clear() const
 {
 	SDL_RenderClear(renderer);
 }
 
-void Drawer::DrawRect(int x, int y, int w, int h)
+void Drawer::DrawRect(int x, int y, int w, int h) const
 {
 	SDL_Rect	rect = {x, y, w, h};
 
 	SDL_RenderDrawRect(renderer, &rect);
 }
 
-void Drawer::FillRect(int x, int y, int w, int h)
+void Drawer::FillRect(int x, int y, int w, int h) const
 {
 	SDL_Rect	rect = {x, y, w, h};
 
 	SDL_RenderFillRect(renderer, &rect);
 }
 
-void Drawer::DrawThinLine(int x0, int y0, int x1, int y1)
+void Drawer::DrawThinLine(int x0, int y0, int x1, int y1) const
 {
 	int dx = abs(x1 - x0);
 	int	sx = x0 < x1 ? 1 : -1;
@@ -67,7 +67,7 @@ void Drawer::DrawThinLine(int x0, int y0, int x1, int y1)
 	}
 }
 
-void Drawer::DrawLine(int x0, int y0, int x1, int y1, int thickness)
+void Drawer::DrawLine(int x0, int y0, int x1, int y1, int thickness) const
 {
 	int dx = abs(x1 - x0);
 	int	sx = x0 < x1 ? 1 : -1;
@@ -93,7 +93,7 @@ void Drawer::DrawLine(int x0, int y0, int x1, int y1, int thickness)
 	}
 }
 
-void Drawer::DrawThinCircle(int x, int y, int radius)
+void Drawer::DrawThinCircle(int x, int y, int radius) const
 {
 	int cx = 0;
 	int cy = -radius;
@@ -118,7 +118,7 @@ void Drawer::DrawThinCircle(int x, int y, int radius)
 	}
 }
 
-void Drawer::FillCircle(int x, int y, int radius)
+void Drawer::FillCircle(int x, int y, int radius) const
 {
 	int cx = 0;
 	int cy = -radius;
@@ -139,24 +139,12 @@ void Drawer::FillCircle(int x, int y, int radius)
 	}
 }
 
-void Drawer::DrawPixel(int x, int y)
+void Drawer::DrawPixel(int x, int y) const
 {
 	SDL_RenderDrawPoint(renderer, x, y);
 }
 
-void Drawer::DrawQuadTree(QuadTree &qt)
-{
-	if (qt.subdivided) {
-		for (int k = 0; k < 4; k++) {
-			DrawQuadTree(*qt.children[k]);
-		}
-	}
-	float		hs = qt.size / 2.0f;
-	SDL_Rect	rect = {(int)(qt.position.x - hs), (int)(qt.position.y - hs), (int)qt.size, (int)qt.size};
-	SDL_RenderDrawRect(renderer, &rect);
-}
-
-void Drawer::Write(const std::string& str, int x, int y)
+void Drawer::Write(const std::string& str, int x, int y) const
 {
 	SDL_Surface *surf = TTF_RenderText_Solid(font, str.c_str(), {0, 0, 0, 0});
 	SDL_Texture *text = SDL_CreateTextureFromSurface(renderer, surf);
@@ -167,7 +155,7 @@ void Drawer::Write(const std::string& str, int x, int y)
 	SDL_DestroyTexture(text);
 }
 
-void Drawer::Present()
+void Drawer::Present() const
 {
 	SDL_RenderPresent(renderer);
 }

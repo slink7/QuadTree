@@ -13,5 +13,4 @@ void Ball::updatePosition(float dt) {
 	const Vec2f vel = position - previous_position;
 	previous_position = position;
 	position = position + vel + acceleration * dt * dt;
-	//acceleration = {};
 }
