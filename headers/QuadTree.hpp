@@ -32,6 +32,7 @@ private:
 		const Rectf	&GetArea() const;
 
 		void	Insert(T& value, const Rectf& varea);
+		void	Items(std::vector<T*>& out);
 		void	Querry(std::vector<T*>& out, const Rectf& area);
 		void	Draw(const Drawer& d);
 	};
@@ -84,18 +85,31 @@ void QuadTree<T>::QuadTreeNode::Insert(T &value, const Rectf &varea)
 }
 
 template <typename T>
+inline void QuadTree<T>::QuadTreeNode::Items(std::vector<T *> &out) {
+	for (std::pair<Rectf, T*> pair : items)
+		out.push_back(pair.second);
+	for (int k = 0; k < 4; k++)
+		if (children[k])
+			children[k]->Items(out);
+}
+
+template <typename T>
 void QuadTree<T>::QuadTreeNode::Querry(std::vector<T *> &out, const Rectf &querry)
 {
-	if (!area.Instersects(querry))
-		return ;
-	for (int k = 0; k < 4; k++) {
-		if (children[k])
-			children[k]->Querry(out, querry);
-	}
 	for (std::pair<Rectf, T*> &pair : items) {
 		if (querry.Contains(pair.first))
 			out.push_back(pair.second);
 	}
+	for (int k = 0; k < 4; k++) {
+		if (!children[k])
+			continue ;
+		if (area.Contains(children[k]->area))
+			children[k]->Items(out);
+		else
+			children[k]->Querry(out, querry);
+	
+	}
+	
 }
 
 template <typename T>

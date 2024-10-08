@@ -2,17 +2,17 @@
 NAME = a.out
 
 SRC =\
-	main.cpp\
-	Solver.cpp\
-	Vec2f.cpp\
-	Drawer.cpp\
-	Ball.cpp\
-	Rectf.cpp\
+	sources/main.cpp\
+	sources/Solver.cpp\
+	sources/Vec2f.cpp\
+	sources/Drawer.cpp\
+	sources/Ball.cpp\
+	sources/Rectf.cpp\
 	
 CFLAGS = -Wall -Werror -Wextra -g3
 LFLAGS = -lSDL2 -lSDL2_ttf
 
-INCLUDES = -Ilibft/ -I./
+INCLUDES = -Iheaders/ -I./
 
 OBJ_DIR = obj
 

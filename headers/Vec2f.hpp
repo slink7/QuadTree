@@ -21,9 +21,9 @@ struct Vec2f {
 	Vec2f	operator*(const float& other) const;
 	Vec2f	operator/(const float& other) const;
 
-	float	getNorm();
-	float	getSquaredNorm();
-	float	dot(const Vec2f& other);
+	float	getNorm() const;
+	float	getSquaredNorm() const;
+	float	dot(const Vec2f& other) const;
 };
 
 std::ostream	&operator<<(std::ostream &stream, const Vec2f& vec);

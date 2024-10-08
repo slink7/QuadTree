@@ -2,6 +2,7 @@
 #define BALL_HPP
 
 #include <SDL2/SDL.h>
+#include <chrono>
 
 #include "Vec2f.hpp"
 

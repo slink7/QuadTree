@@ -4,7 +4,7 @@ Drawer::Drawer(const char *title, int width, int height)
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
 	TTF_Init();
-	window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, 0);
+	window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_BORDERLESS);
 	renderer = SDL_CreateRenderer(window, -1, 0);
 	font = TTF_OpenFont("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 16);
 }

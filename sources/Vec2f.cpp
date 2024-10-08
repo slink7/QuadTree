@@ -63,17 +63,17 @@ Vec2f Vec2f::operator/(const float &other) const
 	return Vec2f(x / other, y / other);
 }
 
-float Vec2f::getNorm()
+float Vec2f::getNorm() const
 {
 	return (sqrtf(x * x + y * y));
 }
 
-float Vec2f::getSquaredNorm()
+float Vec2f::getSquaredNorm() const
 {
 	return (x * x + y * y);
 }
 
-float Vec2f::dot(const Vec2f &other)
+float Vec2f::dot(const Vec2f &other) const
 {
 	return (x * other.x + y * other.y);
 }

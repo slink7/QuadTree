@@ -9,11 +9,11 @@ void Solver::input()
 			if (event.key.keysym.sym == SDLK_ESCAPE)
 				exit = true;
 			if (event.key.keysym.sym == SDLK_KP_PLUS) {
-				for (int k = 0; k < 5; k++) {
+				for (int k = 0; k < 1; k++) {
 					float theta = 2.0f * M_PI * distrib(mt) / 1000.0f;
 					float delta = 192.0f * sqrt(distrib(mt) / 1000.0f);
 					Ball b(512.0f + cosf(theta) * delta, 512.0f + sin(theta) * delta, 8.0f);
-					b.acceleration = {0.0f, 50.0f};
+					b.acceleration = {0.0f, 1000.0f};
 					balls.push_back(b);
 				}
 			}
@@ -44,6 +44,7 @@ void Solver::logic()
 	querry.clear();
 	for (unsigned long k = 0; k < balls.size(); k++) {
 		Ball& ball0 = balls.at(k);
+
 		querry.clear();
 		qt.Querry(querry, (Rectf){ball0.position.x - 2.0f * ball0.radius - 1.0f, ball0.position.y - 2.0f * ball0.radius - 1.0f, 6.0f * ball0.radius + 2.0f, 6.0f * ball0.radius + 2.0f});
 		for (Ball *ball1 : querry) {
@@ -69,14 +70,15 @@ void Solver::logic()
 		if (ball0.position.y > 1000.0f - ball0.radius)
 			ball0.position.y = 1000.0f - ball0.radius;
 
-		Vec2f to_obj = ball0.position - Vec2f(512.0f, 512.0f);
-		float dist = to_obj.getNorm();
-		if (dist > 512.0f - ball0.radius) {
-			Vec2f n = to_obj / dist;
-			ball0.position = Vec2f(512.0f, 512.0f) + n * (512.0f - ball0.radius);
-		}
-		ball0.updatePosition(dt);
+		// Vec2f to_obj = ball0.position - Vec2f(512.0f, 512.0f);
+		// float dist = to_obj.getNorm();
+		// if (dist > 512.0f - ball0.radius) {
+		// 	Vec2f n = to_obj / dist;
+		// 	ball0.position = Vec2f(512.0f, 512.0f) + n * (512.0f - ball0.radius);
+		// }
 	}
+	for (unsigned long k = 0; k < balls.size(); k++)
+		balls[k].updatePosition(dt);
 }
 
 void Solver::render()
